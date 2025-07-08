@@ -1,0 +1,74 @@
+public class Character {
+    private int health;
+    private int damage;
+    private int shield;
+
+    public Character(int health, int damage, int shield) {
+        this.health = health;
+        this.damage = damage;
+        this.shield = shield;
+    }
+
+    public int getHealth() {
+        return health;
+    }
+
+    public int getDamage() {
+        return damage;
+    }
+
+    public int getShield() {
+        return shield;
+    }
+
+    public void setHealth(int health) {
+        this.health = health;
+    }
+
+    public void receiveDamage(int damage) {
+        int effectiveDamage = Math.max(damage - shield, 0);
+        health -= effectiveDamage;  // Removed Math.max to allow negative health
+        if (health <= 0) {
+            System.out.println("Character has died");
+        }
+    }
+}
+public class Paladin extends Swordsman {
+    private boolean hasResurrected;
+
+    public Paladin() {
+        super();
+        this.hasResurrected = false;
+    }
+
+    @Override
+    public void receiveDamage(int damage) {
+        int effectiveDamage = damage;
+        if (damage % 2 == 0) {
+            effectiveDamage = damage / 2;
+        }
+        effectiveDamage = Math.max(effectiveDamage - getShield(), 0);
+        setHealth(getHealth() - effectiveDamage);
+
+        if (getHealth() <= 0) {
+            System.out.println("Character has died");
+            if (!hasResurrected) {
+                resurrect();
+            } else {
+                System.out.println("Paladin has died");
+            }
+        }
+    }
+
+    public void resurrect() {
+        if (!hasResurrected) {
+            hasResurrected = true;
+            setHealth(100);
+        }
+    }
+}
+public class Swordsman extends Character {
+    public Swordsman() {
+        super(100, 10, 10); // health=100, damage=10, shield=10
+    }
+}

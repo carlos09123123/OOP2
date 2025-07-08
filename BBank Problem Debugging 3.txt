@@ -1,0 +1,128 @@
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        BankingApp app = new BankingApp();
+        BankAccount account = app.createBankAccount("123456789");
+        account.deposit(5000.00f);
+        
+        Scanner scanner = new Scanner(System.in);
+        int choice;
+        
+        do {
+            System.out.println("---OOP BANK---");
+            System.out.println("Press 1 to Deposit");
+            System.out.println("Press 2 to Withdraw");
+            System.out.println("Press 3 to Balance Inquiry");
+            System.out.println("Press 4 to Exit");
+            System.out.print("Enter Choice : ");
+            
+            try {
+                choice = scanner.nextInt();
+                
+                switch (choice) {
+                    case 1:
+                        System.out.print("Enter Deposit Amount Php: ");
+                        float depositAmount = scanner.nextFloat();
+                        app.deposit(account, depositAmount);
+                        break;
+                    case 2:
+                        boolean validWithdrawal = false;
+                        while (!validWithdrawal) {
+                            System.out.print("Enter Withdraw Amount Php: ");
+                            float withdrawAmount = scanner.nextFloat();
+                            try {
+                                account.withdraw(withdrawAmount);
+                                System.out.printf("Successfully Withdrwan Php: %,.2f%n", withdrawAmount);
+                                System.out.printf("New Balance Php: %,.2f%n", account.getBalance());
+                                validWithdrawal = true;
+                            } catch (NegativeBalanceException e) {
+                                System.out.println("Sorry, the transaction cannot be processed,");
+                                System.out.println("withdrawal amount cannot be less tan 0 or higher than your remaining balance.");
+                                System.out.println("Please enter an acceptable amount.");
+                            }
+                        }
+                        break;
+                    case 3:
+                        System.out.printf("Available Balance Php: %,.2f%n", account.getBalance());
+                        break;
+                    case 4:
+                        System.out.println("Thank you for choosing OOP Bank!");
+                        break;
+                    default:
+                        System.out.println("Invalid Choice! Please Try Again!");
+                }
+            } catch (Exception e) {
+                System.out.println("Invalid input! Please enter a number.");
+                scanner.next(); // clear invalid input
+                choice = 0;
+            }
+        } while (choice != 4);
+        
+        scanner.close();
+    }
+}
+
+public abstract class Bank{
+    abstract void setBalance(double accountBalance);
+    abstract double getBalance();
+}
+class BankAccount {
+    private String accountNumber;
+    private float balance;
+
+    public BankAccount(String accountNumber) {
+        this.accountNumber = accountNumber;
+        this.balance = 0.0f;
+    }
+
+    public void deposit(float amount) {
+        if (amount > 0) {
+            balance += amount;
+        }
+    }
+
+    public void withdraw(float amount) throws NegativeBalanceException {
+        if (amount <= 0) {
+            throw new NegativeBalanceException("Withdrawal amount must be positive");
+        }
+        if (balance - amount < 0) {
+            throw new NegativeBalanceException("Cannot withdraw more than balance");
+        }
+        balance -= amount;
+    }
+
+    public float getBalance() {
+        return balance;
+    }
+
+    public String getAccountNumber() {
+        return accountNumber;
+    }
+}
+class NegativeBalanceException extends Exception {
+    public NegativeBalanceException(String message) {
+        super(message);
+    }
+}
+class BankingApp {
+    public BankAccount createBankAccount(String accountNumber) {
+        return new BankAccount(accountNumber);
+    }
+
+    public void deposit(BankAccount bankAccount, float amount) {
+        bankAccount.deposit(amount);
+    }
+
+    public void withdraw(BankAccount bankAccount, float amount) {
+        try {
+            bankAccount.withdraw(amount);
+            System.out.printf("Successfully Withdrwan Php: %,.2f%n", amount);
+            System.out.printf("New Balance Php: %,.2f%n", bankAccount.getBalance());
+        } catch (NegativeBalanceException e) {
+            System.out.println("Sorry, the transaction cannot be processed,");
+            System.out.println("withdrawal amount cannot be less than 0 or higher than your remaining balance.");
+            System.out.println("Please enter an acceptable amount.");
+        }
+    }
+}

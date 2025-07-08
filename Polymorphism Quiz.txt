@@ -1,0 +1,101 @@
+import java.util.Scanner;
+
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.print("Shape(R/S/C): ");
+        char shapeType = scanner.next().charAt(0);
+        Shape shape = null;
+
+        switch (Character.toUpperCase(shapeType)) {
+            case 'R':
+                System.out.print("Length: ");
+                double length = scanner.nextDouble();
+                System.out.print("Width: ");
+                double width = scanner.nextDouble();
+                shape = new Rectangle(length, width);
+                break;
+            case 'S':
+                System.out.print("Side: ");
+                double side = scanner.nextDouble();
+                shape = new Square(side);
+                break;
+            case 'C':
+                System.out.print("Radius: ");
+                double radius = scanner.nextDouble();
+                shape = new Circle(radius);
+                break;
+            default:
+                System.out.println("Invalid shape type");
+                System.exit(1);
+        }
+
+        System.out.printf("\nArea: %.2f\n", shape.getArea());
+        if (shapeType == 'C' || shapeType == 'c') {
+            System.out.printf("Circumference: %.2f\n", shape.getPerimeter());
+        } else {
+            System.out.printf("Perimeter: %.2f\n", shape.getPerimeter());
+        }
+
+        scanner.close();
+    }
+}
+abstract class Shape {
+    public abstract double getArea();
+    public abstract double getPerimeter();
+}
+class Rectangle extends Shape {
+    private double length;
+    private double width;
+
+    public Rectangle(double length, double width) {
+        this.length = length;
+        this.width = width;
+    }
+
+    @Override
+    public double getArea() {
+        return length * width;
+    }
+
+    @Override
+    public double getPerimeter() {
+        return 2 * (length + width);
+    }
+}
+class Square extends Shape {
+    private double side;
+
+    public Square(double side) {
+        this.side = side;
+    }
+
+    @Override
+    public double getArea() {
+        return side * side;
+    }
+
+    @Override
+    public double getPerimeter() {
+        return 4 * side;
+    }
+}
+class Circle extends Shape {
+    private double radius;
+
+    public Circle(double radius) {
+        this.radius = radius;
+    }
+
+    @Override
+    public double getArea() {
+        return Math.PI * radius * radius;
+    }
+
+    @Override
+    public double getPerimeter() {
+        return 2 * Math.PI * radius;
+    }
+}

@@ -1,0 +1,71 @@
+public class Dog {
+    // Private properties
+    private String breed;
+    private char gender;
+    private String color;
+
+    // Constructor
+    public Dog(char gender, String color) {
+        this.breed = "Golden Retriever";
+        
+        // Set gender (default to 'm' if invalid)
+        if (gender == 'm' || gender == 'f') {
+            this.gender = gender;
+        } else {
+            this.gender = 'm';
+        }
+        
+        // Set color (default to "gold" if invalid)
+        if (color.equals("gold") || color.equals("brown")) {
+            this.color = color;
+        } else {
+            this.color = "gold";
+        }
+    }
+
+    // Getter methods
+    public String getBreed() {
+        return breed;
+    }
+
+    public char getGender() {
+        return gender;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    // Setter methods
+    public void setGender(char gender) {
+        if (gender == 'm' || gender == 'f') {
+            this.gender = gender;
+        } else {
+            this.gender = 'm'; // Default to male if invalid
+        }
+    }
+
+    public void setColor(String color) {
+        if (color.equals("gold") || color.equals("brown")) {
+            this.color = color;
+        } else {
+            this.color = "gold"; // Default to gold if invalid
+        }
+    }
+
+    // Bark method
+    public void bark(int n) {
+        if (n > 0) {
+            for (int i = 0; i < n; i++) {
+                System.out.println("Woof");
+            }
+        }
+    }
+
+    // toString method
+    @Override
+    public String toString() {
+        String genderStr = (gender == 'm') ? "male" : "female";
+        return "My " + genderStr + ", " + color + " Golden Retriever";
+    }
+}

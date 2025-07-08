@@ -1,0 +1,109 @@
+public class Main {
+    public static void main(String[] args) {
+        SortSubClass sorter = new SortSubClass();
+
+        sorter.inputArray();
+        sorter.inputIndex();
+        sorter.displayUnsorted();
+        sorter.displaySorted();
+        sorter.compute();
+        sorter.display();
+    }
+}
+
+import java.util.*;
+import java.text.DecimalFormat;
+public class SortSubClass extends SortAbstractClass {
+    private int size;
+    private double[] numbers;
+    private double sum = 0;
+
+    Scanner scanner = new Scanner(System.in);
+    DecimalFormat df = new DecimalFormat("#0.00");
+
+    @Override
+    public void inputArray() {
+        boolean valid = false;
+        while (!valid) {
+            System.out.print("Enter array size: ");
+            try {
+                size = scanner.nextInt();
+                if (size <= 0) {
+                    System.out.println("Invalid array size!");
+                } else {
+                    valid = true;
+                    numbers = new double[size];
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Invalid array size!");
+                scanner.next();
+            }
+        }
+    }
+
+    @Override
+    public void inputIndex() {
+        int i = 0;
+        while (i < size) {
+            System.out.print("Enter value at array index " + i + ": ");
+            try {
+                double value = scanner.nextDouble();
+                numbers[i] = value;
+                i++;
+            } catch (InputMismatchException e) {
+                System.out.println("Invalid array value!");
+                scanner.next(); 
+            }
+        }
+    }
+
+    @Override
+    public void displayUnsorted() {
+        System.out.println("The unsorted values of array:");
+        for (double num : numbers) {
+            System.out.print(df.format(num) + ", ");
+        }
+        System.out.println();
+    }
+
+    @Override
+    public void displaySorted() {
+        double[] sorted = numbers.clone();
+        Arrays.sort(sorted);
+        System.out.println("The sorted values of array:");
+        for (int i = sorted.length - 1; i >= 0; i--) {
+            System.out.print(df.format(sorted[i]) + ", ");
+        }
+        System.out.println();
+    }
+
+    @Override
+    public void compute() {
+        sum = 0;
+        for (double num : numbers) {
+            sum += num;
+        }
+    }
+
+    @Override
+    public void display() {
+        double min = numbers[0];
+        for (double num : numbers) {
+            if (num < min) min = num;
+        }
+        double average = sum / size;
+
+        System.out.println("The sum of the values is : " + df.format(sum));
+        System.out.println("The average value is : " + df.format(average));
+        System.out.println("The lowest value is : " + df.format(min));
+    }
+}
+
+public abstract class SortAbstractClass {
+    public abstract void inputArray();
+    public abstract void inputIndex();
+    public abstract void displayUnsorted();
+    public abstract void displaySorted();
+    public abstract void compute();
+    public abstract void display();
+}

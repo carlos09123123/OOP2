@@ -1,0 +1,105 @@
+import java.text.NumberFormat;
+import java.util.Locale;
+import java.util.Scanner;
+
+class BankAccount {
+    private double balance;
+    private static final NumberFormat formatter = NumberFormat.getNumberInstance(Locale.US);
+
+    public BankAccount(double initialBalance) {
+        balance = initialBalance;
+        formatter.setMinimumFractionDigits(2);
+        formatter.setMaximumFractionDigits(2);
+    }
+
+    public synchronized void deposit(double amount) {
+        if (amount >= 0) {
+            balance += amount;
+            System.out.printf("%s deposited %s. New balance: %s%n",
+                    Thread.currentThread().getName(),
+                    formatter.format(amount),
+                    formatter.format(balance));
+        }
+    }
+
+    public synchronized void withdraw(double amount) {
+        if (amount >= 0 && amount <= balance) {
+            balance -= amount;
+            System.out.printf("%s withdrew %s. New balance: %s%n",
+                    Thread.currentThread().getName(),
+                    formatter.format(amount),
+                    formatter.format(balance));
+        } else {
+            System.out.printf("%s tried to withdraw %s but insufficient funds.%n",
+                    Thread.currentThread().getName(),
+                    formatter.format(amount));
+        }
+    }
+
+    public String getFormattedBalance() {
+        return formatter.format(balance);
+    }
+}
+
+class BankTask implements Runnable {
+    private BankAccount account;
+    private boolean isDeposit;
+    private double amount;
+
+    public BankTask(BankAccount account, boolean isDeposit, double amount) {
+        this.account = account;
+        this.isDeposit = isDeposit;
+        this.amount = amount;
+    }
+
+    @Override
+    public void run() {
+        if (isDeposit) {
+            account.deposit(amount);
+        } else {
+            account.withdraw(amount);
+        }
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        // User inputs
+        System.out.print("Enter initial balance: ");
+        double initialBalance = scanner.nextDouble();
+
+        System.out.print("Enter deposit amount: ");
+        double depositAmount = scanner.nextDouble();
+
+        System.out.print("Enter withdrawal amount: ");
+        double withdrawalAmount = scanner.nextDouble();
+
+        // Create account
+        BankAccount account = new BankAccount(initialBalance);
+
+        // Create tasks
+        BankTask depositTask = new BankTask(account, true, depositAmount);
+        BankTask withdrawTask = new BankTask(account, false, withdrawalAmount);
+
+        // Create threads
+        Thread thread1 = new Thread(depositTask, "Thread-1");
+        Thread thread2 = new Thread(withdrawTask, "Thread-2");
+
+        // Start threads
+        thread1.start();
+        thread2.start();
+
+        // Wait for both threads to finish
+        try {
+            thread1.join();
+            thread2.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        // Final balance output
+        System.out.println("Final balance: " + account.getFormattedBalance());
+    }
+}

@@ -1,0 +1,65 @@
+import java.util.Scanner;
+import java.util.ArrayList;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        Tokenizer<String> tokenizer = new Tokenizer<>();
+
+        System.out.print("Enter a sentence: ");
+        String input = scanner.nextLine();
+
+        tokenizer.tokenize(input);
+        tokenizer.displayTokens();
+    }
+}
+
+import java.util.ArrayList;
+
+public class Tokenizer<T> implements ITokenizer<T> {
+    private ArrayList<T> tokens;
+
+    public Tokenizer() {
+        this.tokens = new ArrayList<>();
+    }
+
+    @Override
+    public void tokenize(String input) {
+        tokens.clear();
+        String[] splitTokens = input.split(" ");
+
+        for (String token : splitTokens) {
+            if (!token.isEmpty()) { // Avoid empty tokens
+                tokens.add((T) token);
+            }
+        }
+    }
+
+    @Override
+    public ArrayList<T> getTokens() {
+        return tokens;
+    }
+
+    @Override
+    public void displayTokens() {
+        System.out.println("\nTokens:");
+        for (T token : tokens) {
+            System.out.println(token);
+        }
+        System.out.println("Total tokens: " + getTokenCount());
+    }
+
+    @Override
+    public int getTokenCount() {
+        return tokens.size();
+    }
+}
+
+import java.util.ArrayList;
+
+public interface ITokenizer<T> {
+    void tokenize(String input);
+    ArrayList<T> getTokens();
+    void displayTokens();
+    int getTokenCount();
+}

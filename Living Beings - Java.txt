@@ -1,0 +1,52 @@
+public interface LivingBeing {
+    void eat();
+    void grow();
+    void grow(int n);
+}
+public class Dog extends Animal {
+    public Dog() {}
+    
+    public void bark() {
+        System.out.println("Woof");
+    }
+}
+public class Human implements LivingBeing {
+    public Human() {}
+    
+    @Override
+    public void eat() {
+        System.out.println("Human is eating");
+    }
+    
+    @Override
+    public void grow() {
+        System.out.println("Human is growing");
+    }
+    
+    @Override
+    public void grow(int n) {
+        for (int i = 0; i < n; i++) {
+            System.out.println("Human is growing");
+        }
+    }
+}
+public class Animal implements LivingBeing {
+    public Animal() {}
+    
+    @Override
+    public void eat() {
+        System.out.println("Animal is eating");
+    }
+    
+    @Override
+    public void grow() {
+        System.out.println("Animal is growing");
+    }
+    
+    @Override
+    public void grow(int n) {
+        for (int i = 0; i < n; i++) {
+            System.out.println("Animal is growing");
+        }
+    }
+}

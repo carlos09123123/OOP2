@@ -1,0 +1,43 @@
+public interface EBookReader {
+    void openBook(String bookTitle);
+    void closeBook();
+    void turnPageForward();
+    void turnPageBackward();
+}
+public class BasicEBookReader implements EBookReader {
+    private String currentBook;
+
+    @Override
+    public void openBook(String bookTitle) {
+        currentBook = bookTitle;
+        System.out.println("Opening the book: " + bookTitle + ".");
+    }
+
+    @Override
+    public void closeBook() {
+        if (currentBook != null) {
+            System.out.println("Closing the current book.");
+            currentBook = null;
+        } else {
+            System.out.println("No book is currently open.");
+        }
+    }
+
+    @Override
+    public void turnPageForward() {
+        if (currentBook != null) {
+            System.out.println("Turning to the next page.");
+        } else {
+            System.out.println("No book is currently open.");
+        }
+    }
+
+    @Override
+    public void turnPageBackward() {
+        if (currentBook != null) {
+            System.out.println("Going back to the previous page.");
+        } else {
+            System.out.println("No book is currently open.");
+        }
+    }
+}

@@ -1,0 +1,73 @@
+public class CellphoneLoad {
+    // Private properties
+    private boolean hasUnlimitedCalls;
+    private boolean hasUnlimitedTexts;
+    private int internetMB;
+
+    // Constructor
+    public CellphoneLoad(boolean hasUnlimitedCalls, boolean hasUnlimitedTexts, int internetMB) {
+        this.hasUnlimitedCalls = hasUnlimitedCalls;
+        this.hasUnlimitedTexts = hasUnlimitedTexts;
+        this.internetMB = internetMB;
+    }
+
+    // Getter methods - corrected to match expected calling convention
+    public boolean getHasUnlimitedCalls() {
+        return hasUnlimitedCalls;
+    }
+
+    public boolean getHasUnlimitedTexts() {
+        return hasUnlimitedTexts;
+    }
+
+    public int getInternetMB() {
+        return internetMB;
+    }
+}
+
+class Phone {
+    // Private properties
+    private boolean hasUnlimitedCalls;
+    private boolean hasUnlimitedTexts;
+    private int internetMB;
+
+    // Constructor
+    public Phone() {
+        this.hasUnlimitedCalls = false;
+        this.hasUnlimitedTexts = false;
+        this.internetMB = 8;
+    }
+
+    // Load method
+    public void load(CellphoneLoad load) {
+        this.hasUnlimitedCalls = load.getHasUnlimitedCalls();
+        this.hasUnlimitedTexts = load.getHasUnlimitedTexts();
+        this.internetMB += load.getInternetMB();
+    }
+
+    // toString method
+    @Override
+    public String toString() {
+        return "Has unlimited calls = " + hasUnlimitedCalls + 
+               ", Has unlimited texts = " + hasUnlimitedTexts + 
+               ", Internet MB = " + internetMB;
+    }
+}
+
+class ILoad extends CellphoneLoad {
+    public ILoad() {
+        super(false, false, 2888);
+    }
+}
+
+class CITLoad extends CellphoneLoad {
+    public CITLoad() {
+        super(true, true, 1288);
+    }
+}
+
+class CTLoad extends CellphoneLoad {
+    public CTLoad() {
+        super(true, true, 6);
+    }
+}

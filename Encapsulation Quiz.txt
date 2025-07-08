@@ -1,0 +1,94 @@
+Encapsulation Quiz
+import java.util.Scanner;
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.print("Enter x: ");
+        int x = scanner.nextInt();
+        System.out.print("Enter y: ");
+        int y = scanner.nextInt();
+
+        Point topLeft = new Point(0, 0);
+        Point bottomRight = new Point(x, y);
+        Rectangle rectangle = new Rectangle(topLeft, bottomRight);
+
+        rectangle.display();
+
+        if (rectangle.isSquare()) {
+            System.out.println("\nSQUARE");
+        } else {
+            System.out.println("\nRECTANGLE");
+        }
+
+        System.out.println("AREA: " + rectangle.area());
+        System.out.println("PERIMETER: " + rectangle.perimeter());
+        System.out.println("CENTER POINT: " + rectangle.centerPoint());
+    }
+}
+class Point {
+    private int x;
+    private int y;
+
+    public Point(int x, int y) {
+        this.x = x;
+        this.y = y;
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
+}
+class Rectangle {
+    private Point topLeft;
+    private Point bottomRight;
+
+    public Rectangle(Point topLeft, Point bottomRight) {
+        this.topLeft = topLeft;
+        this.bottomRight = bottomRight;
+    }
+
+    public void display() {
+        int width = bottomRight.getX() - topLeft.getX();
+        int height = bottomRight.getY() - topLeft.getY();
+
+        for (int y = 0; y <= height; y++) {
+            for (int x = 0; x <= width; x++) {
+                if (y == 0 || y == height || x == 0 || x == width) {
+                    System.out.print("# ");
+                } else {
+                    System.out.print("  ");
+                }
+            }
+            System.out.println();
+        }
+    }
+
+    public int area() {
+        int width = bottomRight.getX() - topLeft.getX();
+        int height = bottomRight.getY() - topLeft.getY();
+        return width * height;
+    }
+
+    public int perimeter() {
+        int width = bottomRight.getX() - topLeft.getX();
+        int height = bottomRight.getY() - topLeft.getY();
+        return 2 * (width + height);
+    }
+
+    public String centerPoint() {
+        double centerX = (topLeft.getX() + bottomRight.getX()) / 2.0;
+        double centerY = (topLeft.getY() + bottomRight.getY()) / 2.0;
+        return String.format("(%.2f,%.2f)", centerX, centerY);
+    }
+
+    public boolean isSquare() {
+        int width = bottomRight.getX() - topLeft.getX();
+        int height = bottomRight.getY() - topLeft.getY();
+        return width == height;
+    }
+}

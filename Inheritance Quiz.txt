@@ -1,0 +1,78 @@
+import java.util.Scanner;
+
+
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        
+        System.out.print("Enter side length: ");
+        int side = scanner.nextInt();
+        
+        Square square = new Square(side);
+        
+        System.out.println("Area: " + square.area());
+        System.out.println("Perimeter: " + square.perimeter());
+    }
+}
+class Rectangle {
+    private int length;
+    private int width;
+    
+    // Constructor
+    public Rectangle(int length, int width) {
+        System.out.println("Rectangle Constructor");
+        this.length = length;
+        this.width = width;
+    }
+    
+    // Getters and setters
+    protected int getLength() {
+        return length;
+    }
+    
+    protected void setLength(int length) {
+        this.length = length;
+    }
+    
+    protected int getWidth() {
+        return width;
+    }
+    
+    protected void setWidth(int width) {
+        this.width = width;
+    }
+    
+    // Area method
+    public int area() {
+        System.out.println("Rectangle Area");
+        return length * width;
+    }
+    
+    // Perimeter method
+    public int perimeter() {
+        System.out.println("Rectangle Perimeter");
+        return 2 * (length + width);
+    }
+}
+class Square extends Rectangle {
+    // Constructor
+    public Square(int side) {
+        super(side, side);
+        System.out.println("Square Constructor");
+    }
+    
+    // Override area method
+    @Override
+    public int area() {
+        System.out.println("Square Area");
+        return getLength() * getLength();
+    }
+    
+    // Override perimeter method
+    @Override
+    public int perimeter() {
+        System.out.println("Square Perimeter");
+        return 4 * getLength();
+    }
+}

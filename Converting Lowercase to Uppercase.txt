@@ -1,0 +1,33 @@
+import java.util.Scanner;
+
+public class Main {
+    private String inputString;
+
+    // Constructor
+    public Main(String input) {
+        this.inputString = input;
+    }
+
+    // Method to convert to uppercase
+    public String convertToUppercase() {
+        StringBuilder result = new StringBuilder();
+        for (char c : inputString.toCharArray()) {
+            result.append(Character.toUpperCase(c));
+        }
+        return result.toString();
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        
+        System.out.print("Enter a string: ");
+        String userInput = scanner.nextLine();
+        
+        Main converter = new Main(userInput);
+        String convertedString = converter.convertToUppercase();
+        
+        System.out.println("String in uppercase: " + convertedString);
+        
+        scanner.close();
+    }
+}

@@ -1,0 +1,164 @@
+import java.text.DecimalFormat;
+import java.util.Arrays;
+import java.util.Scanner;
+import java.text.DecimalFormat;
+ 
+public class Main {
+    public static void main(String[] args) {
+        DecimalFormat df = new DecimalFormat("#,###.00");  // Changed to force 2 decimal places
+        Scanner scanner = new Scanner(System.in);
+
+ 
+        System.out.print("Enter 4 numbers : ");
+        double[] numbers = new double[4];
+        for (int i = 0; i < 4; i++) {
+            numbers[i] = scanner.nextDouble();
+        }
+ 
+        SumCalculator sumCalculator = new SumCalculator(numbers);
+        AverageCalculator averageCalculator = new AverageCalculator(numbers);
+        LowestCalculator lowestCalculator = new LowestCalculator(numbers);
+        RankCalculator rankCalculator = new RankCalculator(numbers);
+ 
+        Thread sumThread = new Thread(sumCalculator);
+        Thread averageThread = new Thread(averageCalculator);
+        Thread lowestThread = new Thread(lowestCalculator);
+        Thread rankThread = new Thread(rankCalculator);
+ 
+        sumThread.start();
+        averageThread.start();
+        lowestThread.start();
+        rankThread.start();
+ 
+        try {
+            sumThread.join();
+            averageThread.join();
+            lowestThread.join();
+            rankThread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+ 
+        System.out.println("Sum: " + df.format(sumCalculator.getSum()));
+        System.out.println("Average: " + df.format(averageCalculator.getAverage()));
+        System.out.println("Lowest: " + df.format(lowestCalculator.getLowest()));
+        System.out.print("Sorted Values (Descending):");
+        System.out.println(rankCalculator.getRankedNumbers());
+    }
+}
+
+import java.text.DecimalFormat;
+import java.util.Arrays;
+import java.util.Scanner;
+import java.text.DecimalFormat;
+ 
+class SumCalculator implements Runnable {
+    private double[] numbers;
+    private double sum;
+ 
+    public SumCalculator(double[] numbers) {
+        this.numbers = numbers;
+    }
+ 
+    @Override
+    public void run() {
+        sum = 0;
+        for (double num : numbers) {
+            sum += num;
+        }
+    }
+ 
+    public double getSum() {
+        return sum;
+    }
+}
+import java.text.DecimalFormat;
+import java.util.Arrays;
+import java.util.Scanner;
+import java.text.DecimalFormat;
+ 
+class AverageCalculator implements Runnable {
+    private double[] numbers;
+    private double average;
+ 
+    public AverageCalculator(double[] numbers) {
+        this.numbers = numbers;
+    }
+ 
+    @Override
+    public void run() {
+        double sum = 0;
+        for (double num : numbers) {
+            sum += num;
+        }
+        average = sum / numbers.length;
+    }
+ 
+    public double getAverage() {
+        return average;
+    }
+}
+
+import java.text.DecimalFormat;
+import java.util.Arrays;
+import java.util.Scanner;
+import java.text.DecimalFormat;
+ 
+class LowestCalculator implements Runnable {
+    private double[] numbers;
+    private double lowest;
+ 
+    public LowestCalculator(double[] numbers) {
+        this.numbers = numbers;
+    }
+ 
+    @Override
+    public void run() {
+        lowest = numbers[0];
+        for (double num : numbers) {
+            if (num < lowest) {
+                lowest = num;
+            }
+        }
+    }
+ 
+    public double getLowest() {
+        return lowest;
+    }
+}
+
+import java.text.DecimalFormat;
+import java.util.Arrays;
+import java.util.Scanner;
+import java.text.DecimalFormat;
+ 
+class RankCalculator implements Runnable {
+    private double[] numbers;
+    private String rankedNumbers;
+ 
+    public RankCalculator(double[] numbers) {
+        this.numbers = numbers;
+    }
+ 
+    @Override
+    public void run() {
+        double[] sorted = Arrays.copyOf(numbers, numbers.length);
+        Arrays.sort(sorted);
+        // Reverse the array to get descending order
+        for (int i = 0; i < sorted.length / 2; i++) {
+            double temp = sorted[i];
+            sorted[i] = sorted[sorted.length - 1 - i];
+            sorted[sorted.length - 1 - i] = temp;
+        }
+        StringBuilder sb = new StringBuilder();
+        DecimalFormat df = new DecimalFormat("#,##0.00"); // Added thousand separators
+        for (int i = 0; i < sorted.length; i++) {
+            sb.append("  ").append(df.format(sorted[i])); // Fixed syntax and spacing
+        }
+        rankedNumbers = sb.toString();
+    }
+ 
+    public String getRankedNumbers() {
+        return rankedNumbers;
+    }
+}

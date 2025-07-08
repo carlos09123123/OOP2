@@ -1,0 +1,37 @@
+class Section {
+    public String name;
+    
+    public Section(String name) {
+        this.name = name;
+    }
+}
+class Enrollment {
+    public Section section;
+    public Student student;
+    
+    // Default constructor
+    public Enrollment() {
+        this.section = null;
+        this.student = null;
+        System.out.println("Empty enrollment");
+    }
+    
+    // Parameterized constructor
+    public Enrollment(Section section, Student student) {
+        this.section = section;
+        this.student = student;
+    }
+    
+    // Method to display enrollment details
+    public void displayEnrollment() {
+        System.out.println("Section: " + (section != null ? section.name : "None"));
+        System.out.println("Student: " + (student != null ? student.name : "None"));
+    }
+}
+class Student {
+    public String name;
+    
+    public Student(String name) {
+        this.name = name;
+    }
+}

@@ -1,0 +1,101 @@
+class Superhero {
+    private int health;
+    private int power;
+    private int armor;
+
+    public Superhero(int health, int power, int armor) {
+        this.health = health;
+        this.power = power;
+        this.armor = armor;
+    }
+
+    public int getHealth() {
+        return health;
+    }
+
+    public int getPower() {
+        return power;
+    }
+
+    public int getArmor() {
+        return armor;
+    }
+
+    public void setHealth(int health) {
+        this.health = health;
+    }
+
+    public void takeDamage(int damage) {
+        int effectiveDamage = Math.max(damage - armor, 0);
+        health = Math.max(health - effectiveDamage, 0);
+        if (health <= 0) {
+            System.out.println("Superhero has fallen");
+        }
+    }
+}
+
+class Healer extends Superhero {
+    private boolean hasHealed;
+
+    public Healer() {
+        super(80, 5, 10);
+        this.hasHealed = false;
+    }
+
+    @Override
+    public void takeDamage(int damage) {
+        int effectiveDamage = damage;
+        if (damage % 2 != 0) {
+            effectiveDamage = damage / 2;
+        }
+        effectiveDamage = Math.max(effectiveDamage - getArmor(), 0);
+        int newHealth = getHealth() - effectiveDamage;
+        setHealth(Math.max(newHealth, 0));
+        
+        if (getHealth() <= 0 && !hasHealed) {
+            heal();
+        } else if (getHealth() <= 0) {
+            System.out.println("Healer has fallen");
+        }
+    }
+
+    public void heal() {
+        if (!hasHealed) {
+            hasHealed = true;
+            setHealth(80);
+        }
+    }
+}
+
+class Warrior extends Superhero {
+    public Warrior() {
+        super(120, 10, 20);  // Changed initial health from 100 to 120
+    }
+}
+
+class Mage extends Superhero {
+    private int mana;
+
+    public Mage() {
+        super(100, 25, 5);
+        this.mana = 100;
+    }
+
+    public void castSpell() {
+        if (mana >= 10) {
+            mana -= 10;
+            System.out.println("Mage casts a powerful spell!");
+        } else {
+            System.out.println("Not enough mana to cast a spell");
+        }
+    }
+
+    @Override
+    public void takeDamage(int damage) {
+        int effectiveDamage = Math.max(damage - getArmor(), 0);
+        setHealth(Math.max(getHealth() - effectiveDamage, 0));
+        if (getHealth() <= 0) {
+            System.out.println("Mage has fallen");
+        }
+    }
+}

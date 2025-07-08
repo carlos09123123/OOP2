@@ -1,0 +1,69 @@
+public class Main {
+    public static void main(String[] args) {
+        PerfectCityPlanner planner = new PerfectCityPlanner();
+        planner.execute();
+    }
+}
+import java.util.Scanner;
+
+public class InputReader {
+    public int[][] readGrid() {
+        Scanner scanner = new Scanner(System.in);
+        
+        System.out.print("Enter the size of the grid: ");
+        int n = scanner.nextInt();
+        scanner.nextLine(); // Consume newline
+        
+        int[][] grid = new int[n][n];
+        
+        for (int i = 0; i < n; i++) {
+            System.out.print("Enter row " + (i + 1) + ": ");
+            String[] rowValues = scanner.nextLine().trim().split("\\s+");
+            for (int j = 0; j < n; j++) {
+                grid[i][j] = Integer.parseInt(rowValues[j]);
+            }
+        }
+        
+        return grid;
+    }
+}
+public class PerfectCityPlanner {
+    public void execute() {
+        InputReader inputReader = new InputReader();
+        int[][] grid = inputReader.readGrid();
+        
+        CityGrid cityGrid = new CityGrid(grid);
+        long totalCost = cityGrid.calculateFlatteningCost();
+        
+        System.out.println("Minimum total cost to flatten the city: " + totalCost);
+    }
+}
+public class CityGrid {
+    private final int[][] grid;
+    private final int minElevation;
+
+    public CityGrid(int[][] grid) {
+        this.grid = grid;
+        this.minElevation = findMinElevation();
+    }
+
+    private int findMinElevation() {
+        int min = Integer.MAX_VALUE;
+        for (int[] row : grid) {
+            for (int height : row) {
+                min = Math.min(min, height);
+            }
+        }
+        return min;
+    }
+
+    public long calculateFlatteningCost() {
+        long totalCost = 0;
+        for (int[] row : grid) {
+            for (int height : row) {
+                totalCost += height - minElevation;
+            }
+        }
+        return totalCost;
+    }
+}

@@ -1,0 +1,93 @@
+public class Item {
+    private String title;
+    private String description;
+
+    public Item(String title, String description) {
+        this.title = title;
+        this.description = description;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+}
+public abstract class SocialMedia {
+    private String name;
+    private int yearCreated;
+
+    public SocialMedia(String name, int yearCreated) {
+        this.name = name.substring(0, 1).toUpperCase() + name.substring(1);
+        this.yearCreated = yearCreated;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getYearCreated() {
+        return yearCreated;
+    }
+
+    public abstract Item[] getFeed(int itemCount);
+    public abstract Item[] getFeed();
+
+    @Override
+    public String toString() {
+        return name + " created last " + yearCreated;
+    }
+}
+public class Reddit extends SocialMedia {
+    private static final String NAME = "Reddit";
+    private static final int YEAR_CREATED = 2005;
+    private static final int DEFAULT_ITEMS_COUNT = 10;
+
+    public Reddit() {
+        super(NAME, YEAR_CREATED);
+    }
+
+    @Override
+    public Item[] getFeed(int itemCount) {
+        Item[] items = new Item[itemCount];
+        for (int i = 0; i < itemCount; i++) {
+            items[i] = new Item(
+                "Reddit Item Title " + i,
+                "Reddit Item Description " + i
+            );
+        }
+        return items;
+    }
+
+    @Override
+    public Item[] getFeed() {
+        return getFeed(DEFAULT_ITEMS_COUNT);
+    }
+}
+public class Facebook extends SocialMedia {
+    private static final String NAME = "FaCeBoOk";
+    private static final int YEAR_CREATED = 2004;
+
+    public Facebook() {
+        super(NAME, YEAR_CREATED);
+    }
+
+    @Override
+    public Item[] getFeed(int itemCount) {
+        Item[] items = new Item[itemCount];
+        for (int i = 0; i < itemCount; i++) {
+            items[i] = new Item(
+                "Facebook Item Title " + i,
+                "Facebook Item Description " + i
+            );
+        }
+        return items;
+    }
+
+    @Override
+    public Item[] getFeed() {
+        return getFeed(10);
+    }
+}

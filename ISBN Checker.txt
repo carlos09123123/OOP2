@@ -1,0 +1,131 @@
+import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
+
+
+public class Main {
+    public static void main(String[] args) {
+        // Initialize ISBN list
+        List<String> uncheckedISBNs = List.of(
+            "0471958697", "0000000000", "1111111111", "9999999999", "123", "ABCDEFGHIJ",
+            "047195869X", "0132350882", "1234567890", "abcdefghij", "0306406152",
+            "123456789X", "0136091814", "0201633612", "0262033844", "0596009208",
+            "0131103628", "032157351X", "0201485672", "0201634988"
+        );
+
+        // Create processor instance
+        ISBNProcessor processor = new ISBNProcessorImpl();
+
+        // 1. Write unchecked ISBNs to file
+        processor.writeUncheckedISBNs("ISBNUnchecked.txt", uncheckedISBNs);
+
+        // 2. Read and display all ISBNs
+        List<String> readISBNs = processor.readISBNs("ISBNUnchecked.txt");
+        System.out.println("Unchecked ISBNs:");
+        for (int i = 0; i < readISBNs.size(); i++) {
+            System.out.println((i + 1) + ". " + readISBNs.get(i));
+        }
+
+        // 3. Check validity and write valid ones to new file
+        processor.writeValidISBNs("ISBNValid.txt", readISBNs);
+
+        // 4. Read and display valid ISBNs
+        List<String> validISBNs = processor.readISBNs("ISBNValid.txt");
+        System.out.println("\nValid ISBNs:");
+        for (int i = 0; i < validISBNs.size(); i++) {
+            System.out.println((i + 1) + ". " + validISBNs.get(i));
+        }
+    }
+}
+
+import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
+interface ISBNProcessor {
+    void writeUncheckedISBNs(String filename, List<String> isbns);
+    List<String> readISBNs(String filename);
+    void writeValidISBNs(String filename, List<String> isbns);
+}
+
+import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
+class ISBNProcessorImpl implements ISBNProcessor {
+    @Override
+    public void writeUncheckedISBNs(String filename, List<String> isbns) {
+        try (PrintWriter writer = new PrintWriter(new FileWriter(filename))) {
+            for (String isbn : isbns) {
+                writer.println(isbn);
+            }
+        } catch (IOException e) {
+            System.err.println("Error writing to file: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public List<String> readISBNs(String filename) {
+        List<String> isbns = new ArrayList<>();
+        try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                isbns.add(line.trim());
+            }
+        } catch (IOException e) {
+            System.err.println("Error reading from file: " + e.getMessage());
+        }
+        return isbns;
+    }
+
+    @Override
+    public void writeValidISBNs(String filename, List<String> isbns) {
+        try (PrintWriter writer = new PrintWriter(new FileWriter(filename))) {
+            for (String isbn : isbns) {
+                if (ISBNValidator.isValidISBN(isbn)) {
+                    writer.println(isbn);
+                }
+            }
+        } catch (IOException e) {
+            System.err.println("Error writing to file: " + e.getMessage());
+        }
+    }
+}
+
+import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
+class ISBNValidator {
+    public static boolean isValidISBN(String isbn) {
+        // Check length (must be 10 characters)
+        if (isbn.length() != 10) {
+            return false;
+        }
+
+        // Check first 9 characters are digits
+        for (int i = 0; i < 9; i++) {
+            if (!Character.isDigit(isbn.charAt(i))) {
+                return false;
+            }
+        }
+
+        // Check last character is digit or 'X'
+        char lastChar = isbn.charAt(9);
+        if (!Character.isDigit(lastChar) && lastChar != 'X' && lastChar != 'x') {
+            return false;
+        }
+
+        // Calculate checksum
+        int sum = 0;
+        for (int i = 0; i < 10; i++) {
+            char c = isbn.charAt(i);
+            int value;
+            if (i == 9 && (c == 'X' || c == 'x')) {
+                value = 10;
+            } else {
+                value = Character.getNumericValue(c);
+            }
+            sum += value * (10 - i);
+        }
+
+        return sum % 11 == 0;
+    }
+}

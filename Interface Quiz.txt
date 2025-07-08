@@ -1,0 +1,68 @@
+import java.util.Scanner;
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        
+        System.out.print("Enter type of employee: ");
+        String type = scanner.nextLine().trim();
+        
+        System.out.print("Enter hours worked: ");
+        int value = scanner.nextInt();
+        
+        Employee employee;
+        if (type.equalsIgnoreCase("H")) {
+            employee = new Hourly(value);
+        } else {
+            employee = new Commissioned(value);
+        }
+        
+        System.out.println("Salary: " + (int)employee.getSalary());
+    }
+}
+interface Employee {
+    double getSalary();
+    void setRate(double rate);
+}
+class Commissioned implements Employee {
+    private double rate;
+    private int itemsSold;
+    
+    public Commissioned(int itemsSold) {
+        this.itemsSold = itemsSold;
+        this.rate = 200; 
+    }
+    
+    @Override
+    public double getSalary() {
+        if (itemsSold > 100) {
+            int bonusItems = itemsSold - 100;
+            return (100 * rate) + (bonusItems * (rate + 10));
+        } else {
+            return itemsSold * rate;
+        }
+    }
+    
+    @Override
+    public void setRate(double rate) {
+        this.rate = rate;
+    }
+}
+class Hourly implements Employee {
+    private double rate;
+    private int hoursWorked;
+    
+    public Hourly(int hoursWorked) {
+        this.hoursWorked = hoursWorked;
+        this.rate = 300; 
+    }
+    
+    @Override
+    public double getSalary() {
+        return rate * hoursWorked;
+    }
+    
+    @Override
+    public void setRate(double rate) {
+        this.rate = rate;
+    }
+}
